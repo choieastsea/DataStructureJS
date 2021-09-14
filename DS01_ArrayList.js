@@ -48,6 +48,9 @@ class ArrayList {
     if (index >= 0 && index < this.length) {
       this.list.splice(index, 1);
       this.length -= 1;
+    } else {
+      console.log('Invalid index');
+      return -1;
     }
   }
   search(obj) {
@@ -56,6 +59,7 @@ class ArrayList {
         return i;
       }
     }
+    //return this.list.indexOf(obj)
     return -1;
   }
   isEmpty() {
