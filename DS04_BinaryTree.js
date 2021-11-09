@@ -19,7 +19,7 @@ class BinaryTree {
     }
     traverse = (node) => {
         //traverse한다는 뜻은 탐색한다는 것이고 여기서는 출력으로 의미를 대체한다.
-        //post-order-traverse(부모-왼쪽-오른쪽 자식순으로 탐색)
+        //pre-order-traverse(부모-왼쪽-오른쪽 자식순으로 탐색)
         console.log(node.value);
         if (node.leftChild) {
             this.traverse(node.leftChild);
@@ -65,6 +65,8 @@ node_7.leftChild = node_6;
 
 const bt = new BinaryTree();
 bt.root = node_1;
+console.log('pre-order-traverse');
 bt.print();
-console.log('---')
+console.log('---');
+console.log('BFS traverse');
 bt.bfsTraverse(bt.root);
