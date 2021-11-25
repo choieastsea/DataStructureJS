@@ -65,8 +65,9 @@ node_7.leftChild = node_6;
 
 const bt = new BinaryTree();
 bt.root = node_1;
-console.log('pre-order-traverse');
+console.log('pre-order- traverse');
 bt.print();
 console.log('---');
 console.log('BFS traverse');
+
 bt.bfsTraverse(bt.root);

@@ -14,42 +14,41 @@ class MinHeap {
         this.heap_list[index_b] = tmp;
     }
     insert = (value) => {
-        //일단 Complete Binary Tree의 말단에 값을 삽입하고, 해당 인덱스에서 heapify 수행
+        //일단 Complete Binary Tree의 말단에 값을 삽입하고, 해당 인덱스에서 reverseHeapify 수행
         this.heap_list.push(value);
-        this.heapify(this.heap_list.length - 1);
+        this.reverseHeapify(this.heap_list.length - 1);
         this.count += 1;
     }
-    pop = () => {
+    unshift = () => {
         //루트 노드를 삭제
-        //루트 노드와 마지막 노드의 위치를 바꾸고 루트였던 노드를 삭제한다. 그리고 heap 조건을 맞추도록 reverse heapify 수행
+        //루트 노드와 마지막 노드의 위치를 바꾸고 루트였던 노드를 삭제한다. 그리고 heap 조건을 맞추도록 reverse reverseHeapify 수행
         this.swap(1, this.count);
         const returnValue = this.heap_list.pop();
         this.count -= 1;
-        this.reverseHeapify(1);
+        this.heapify(1);
         return returnValue;
     }
-    heapify = (index) => {
+    reverseHeapify = (index) => {
         //하나씩 삽입할 때, 끝에서부터 올라오면서 힙의 조건을 만족시키도록(min heap에서는 부모가 더 크다면) 재귀적으로 스왑해주도록 한다
         if (index > 1) {
             const parentIndex = parseInt(index / 2);
             if (this.heap_list[index] < this.heap_list[parentIndex]) {
                 this.swap(index, parentIndex);
             }
-            this.heapify(parentIndex);
+            this.reverseHeapify(parentIndex);
 
         }
         else {
             return;
         }
     }
-    reverseHeapify = (index) => {
-        //index, index*2, index*2+1번째 원소 중 가장 작은 것을 parent node로 스왑해준다.
+    heapify = (index) => {         //index, index*2, index*2+1번째 원소 중 가장 작은 것을 parent node로 스왑해준다.
         //바뀐 노드에서 다시 재귀적으로 수행
-        if (index * 2 > this.count) {
+        if (index * 2 > this.heap_list.length - 1) {
             //재귀 탈출 조건 : 자식 노드가 없는 아예 경우(한쪽만 있는 경우 처리 필요)
             return;
         }
-        else if (index * 2 == this.count) {
+        else if (index * 2 == this.heap_list.length - 1) {
             //왼쪽 자식만 있는 경우
             const current = this.heap_list[index];
             const leftChild = this.heap_list[index * 2];
@@ -59,6 +58,7 @@ class MinHeap {
             else {
                 //왼쪽 자식이 더 작은 경우
                 this.swap(index, index * 2);
+                //heapify해주지 않아도됨. (인덱스 벗어나게 되므로)
                 return;
             }
         }
@@ -71,12 +71,12 @@ class MinHeap {
             }
             else if (leftChild <= current && leftChild <= rightChild) {  //leftChild node가 가장 작은 경우
                 this.swap(index, index * 2);
-                this.reverseHeapify(index * 2);
+                this.heapify(index * 2);
             }
-            // else if (rightChild < current && rightChild < leftChild) {                                                      //그 외의 경우(rightChild node가 가장 작거나, 모두 같거나 등)
-            else {
+            // else if (rightChild < current && rightChild < leftChild) {                                                      
+            else { //그 외의 경우(rightChild node가 가장 작거나, 모두 같거나 등)
                 this.swap(index, index * 2 + 1);
-                this.reverseHeapify(index * 2 + 1);
+                this.heapify(index * 2 + 1);
             }
 
         }
@@ -90,26 +90,36 @@ const heapSort = (arr) => {
         min_heap.insert(node);
     });
     arr.map((e) => {
-        const popEl = min_heap.pop();
-        sortedArr.push(popEl)
+        const unshiftedEl = min_heap.unshift();
+        sortedArr.push(unshiftedEl)
     })
     return sortedArr;
 }
 
+//1. 일반 배열을 heap으로 heapify
+const heapifyArr = new MinHeap();
+heapifyArr.heap_list = [null, 2, 10, 1, 4, -2, 6];
+for (let i = heapifyArr.heap_list.length - 1; i > 0; i--) {
+    heapifyArr.heapify(i);
+}
+console.log(`heapified Arr: [null${heapifyArr.heap_list}]\n`);
+
+//2. heap 만들기
 const heap = new MinHeap();
 // heap.heap_list = [null, 1, 3, 2, 5];
-// heap.heapify(5);
+// heap.reverseHeapify(5);
 heap.insert(1);
 heap.insert(5);
 heap.insert(10);
 heap.insert(7);
 heap.insert(51);
 heap.insert(1);
+console.log(heap.heap_list);
 
+//3. unshift
+console.log(`unshifted: ${heap.unshift()}`);
 console.log(heap.heap_list);
-console.log(`popped: ${heap.pop()}`);
-console.log(heap.heap_list);
-console.log(`popped: ${heap.pop()}`);
+console.log(`unshifted: ${heap.unshift()}`);
 console.log(heap.heap_list);
 
 console.log('heapsort')
